@@ -1,0 +1,114 @@
+buildscript {
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+        classpath 'nu.studer:gradle-jooq-plugin:3.0.3'
+    }
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+}
+
+plugins {
+    id "org.flywaydb.flyway" version "6.0.0"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://jitpack.io' }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'nu.studer.jooq'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def dbUrl =  "jdbc:mariadb://localhost:3306/pooldb"
+def dbUsername = "root"
+
+def jooqVersion = "3.12.0"
+def bundleSource = "$projectDir/client/build/bundle/main.bundle.js"
+def bundleTarget = "$projectDir/src/main/resources/html/js/"
+
+dependencies {
+    implementation 'org.apache.poi:poi-ooxml:4.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+    implementation 'com.github.burst-apps-team:burstkit4j:0.12.6'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    implementation "org.flywaydb:flyway-core:5.2.4"
+    implementation "org.jooq:jooq:$jooqVersion"
+    implementation "org.jooq:jooq-meta:$jooqVersion"
+    implementation "org.jooq:jooq-codegen:$jooqVersion"
+    def log4jVersion = "2.12.1"
+    implementation "org.apache.logging.log4j:log4j-api:$log4jVersion"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"
+    implementation "org.slf4j:slf4j-api:1.7.28"
+    implementation 'com.zaxxer:HikariCP:3.3.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "org.ehcache:ehcache:3.8.0"
+    def mariaDbVersion = "2.4.3"
+    implementation "org.mariadb.jdbc:mariadb-java-client:$mariaDbVersion"
+    jooqRuntime "org.mariadb.jdbc:mariadb-java-client:$mariaDbVersion"
+}
+
+flyway {
+    url = dbUrl
+    user = dbUsername
+    locations = ["filesystem:"+project.projectDir.toString()+"/src/main/resources/db/migration"]
+}
+
+jooq {
+    version = jooqVersion
+    edition = "OSS"
+    burstPool(sourceSets.main) {
+        jdbc {
+            url = dbUrl
+            user = dbUsername
+        }
+        generator {
+            name = 'org.jooq.codegen.JavaGenerator'
+            database {
+                includes = ".*"
+                name = "org.jooq.meta.mariadb.MariaDBDatabase"
+                inputSchema = "pooldb"
+                outputSchemaToDefault = true
+            }
+            target {
+                packageName = "burst.pool.db"
+                directory = "src/main/java"
+            }
+        }
+    }
+}
+
+generateBurstPoolJooqSchemaSource.dependsOn flywayMigrate
+generateBurstPoolJooqSchemaSource.onlyIf {System.getProperty("generateSchema") == "true"}
+flywayMigrate.onlyIf {System.getProperty("generateSchema") == "true"}
+
+task removeJsBundle << {
+    delete {
+        delete bundleSource
+        delete bundleTarget
+    }
+}
+
+task copyJsBundle << {
+    copy {
+        from file(bundleSource)
+        into file(bundleTarget)
+    }
+}
+
+copyJsBundle.dependsOn(removeJsBundle, ':client:bundle')
+processResources.dependsOn copyJsBundle
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'burst.pool.Launcher'
+    }
+}

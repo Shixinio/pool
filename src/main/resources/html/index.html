@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{TITLE}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script type="text/javascript" rel="script" src="js/main.bundle.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <h1 class="navbar-brand">
+        <img id="icon" height="50" width="50" src="img/poolIcon.png" />
+        {TITLE}
+    </h1>
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#" id = "getWonBlocksButton" data-toggle="modal" data-target="#wonBlocksModal">Won Blocks</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#infoModal">Info</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="https://explore.burstcoin.network" target="_blank">Explorer</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{SOFTWARE}" target="_blank">Software Packages</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{PUBLICNODE}" target="_blank">
+                    <img width="20" height="20" src="img/burstwallet.png" />
+                    Wallet
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{DISCORD}" target="_blank">
+                    <img width="70" height="25" src="img/discord.png" />
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 text-center">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Elapsed</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="currentRoundElapsed">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Best Deadline</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="bestDeadline">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Best Miner</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="bestMiner">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Best Nonce</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="bestNonce">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Block Height</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="blockHeight">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Network Difficulty</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="netDiff">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Miners</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="minerCount">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 p-3">
+                    <div class="col-xl-12 bg-light border-top border-right border-left rounded-top p-2 overflow-auto">
+                        <p class="d-inline">Pool Capacity</p>
+                    </div>
+                    <div class="col-xl-12 border-bottom border-right border-left rounded-bottom p-2 overflow-auto">
+                        <p class="d-inline" id="poolCapacity">Loading...</p>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <div class="row">
+                        <div class="col-xl-8 col-lg-6 col-md-8 p-3">
+                            <input type="text" id="addressInput" class="form-control" placeholder="BURST-XXXX-XXXX-XXXX-XXXXX">
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-2 col-6 overflow-auto text-nowrap p-3">
+                            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#minerInfoModal" id="getMinerButton">Get Miner</button>
+                        </div>
+                        <div class="col-xl-2 col-lg-3 col-md-2 col-6 overflow-auto text-nowrap p-3">
+                            <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#poolInfoModal">Pool Info</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 position-relative w-100" style="min-height: 400px;">
+            <canvas id="sharesChart"></canvas>
+        </div>
+    </div>
+</div>
+<br />
+<div class="table-responsive p-lg-3 w-100">
+    <table id="miners" class="table table-striped table-bordered">
+        <tr>
+            <th>Miner</th>
+            <th>Current Deadline</th>
+            <th>Pending Balance</th>
+            <th>Effective Capacity</th>
+            <th>Confirmed Deadlines</th>
+            <th>Share</th>
+            <th>Software</th>
+        </tr>
+        <tr>
+            <td colspan="6">Loading...</td>
+        </tr>
+    </table>
+    <p><a href="https://github.com/burst-apps-team/burstpool">Powered by the Burst Apps Team.</a> Copyright © Harry Phillips 2019</p>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="minerInfoModal" tabindex="-1" role="dialog" aria-labelledby="minerInfoTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minerInfoTitle">Miner Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive w-100">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Miner Address</td><td><span id="minerAddress">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pending Balance</td><td><span id="minerPending">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Minimum Payout</td><td><span id="minerMinimumPayout">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Estimated Capacity</td><td><span id="minerCapacity">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>nConf (Last (nAvg + processLag) rounds)</td><td><span id="minerNConf">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Share</td><td><span id="minerShare">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Software</td><td><span id="minerSoftware">Loading...</span></td>
+                        </tr>
+                        <tr id="openSetMinimumPayoutModalButtonTr">
+                            <td colspan="2">
+                                <button class="btn btn-primary btn-block" id="openSetMinimumPayoutModalButton" data-toggle="modal" data-target="#setMinimumPayoutModal">Set Minimum Payout</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="poolInfoModal" tabindex="-1" role="dialog" aria-labelledby="poolInfoTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="poolInfoTitle">Pool Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive w-100">
+                    <table class="table table-striped">
+                        <tr>
+                            <td>Pool Name</td><td><span id="poolName">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pool Account</td><td><span id="poolAccount">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>nAvg</td><td><span id="nAvg">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>nMin</td><td><span id="nMin">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Max Deadline</td><td><span id="maxDeadline">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Process Lag</td><td><span id="processLag">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Fee Recipient</td><td><span id="feeRecipient">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pool Fee</td><td><span id="poolFee">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Winner Reward</td><td><span id="winnerReward">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Minimum Payout</td><td><span id="minimumPayout">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Min payouts at once</td><td><span id="minPayoutsAtOnce">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Payout Transaction Fee</td><td><span id="payoutTxFee">Loading...</span></td>
+                        </tr>
+                        <tr>
+                            <td>Pool Software Version</td><td><span id="poolVersion">Loading...</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="setMinimumPayoutModal" tabindex="-1" role="dialog" aria-labelledby="setMinimumPayoutTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="setMinimumPayoutTitle">Set Minimum Payout</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <label for="setMinimumAddress">Miner Address:</label>
+                    <input type="text" disabled id="setMinimumAddress" class="form-control darkText" placeholder="BURST-XXXX-XXXX-XXXX-XXXXX" />
+                </p><p>
+                    <label for="setMinimumAmount">New Minimum Payout:</label>
+                    <input type="text" id="setMinimumAmount" class="form-control darkText" placeholder="Amount in BURST" />
+                </p><p>
+                    <button class="btn btn-primary" id="generateSetMinimumMessageButton">Generate message to be signed</button>
+                </p><p>
+                    <label for="setMinimumMessage">Message to sign (Valid for 1 hour from when generated):</label>
+                    <input type="text" disabled id="setMinimumMessage" class="form-control darkText" placeholder="Message to sign will appear here" />
+                </p><p>
+                    <label for="setMinimumPublicKey">Public key:</label>
+                    <input type="text" id="setMinimumPublicKey" class="form-control darkText" placeholder="Public Key" />
+                </p><p>
+                    <label for="setMinimumSignature">Message Signature:</label>
+                    <input type="text" id="setMinimumSignature" class="form-control darkText" placeholder="Signature" />
+                </p><p>
+                    <button id="setMinimumPayoutButton" class="btn btn-primary">Set Minimum Payout</button>
+                </p><p>
+                <div class="callout callout-info" id="setMinimumResult">
+                    Result: <span id="setMinimumResultText"></span>
+                </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="wonBlocksModal" tabindex="-1" role="dialog" aria-labelledby="wonBlocksTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="wonBlocksTitle">Won Blocks</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive w-100">
+                    <table class="table table-striped" id="wonBlocksTable"></table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="helpTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpTitle">Help / Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <b>Coming Soon!</b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
